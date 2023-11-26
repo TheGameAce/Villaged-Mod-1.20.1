@@ -1,6 +1,9 @@
 package net.michael.villaged;
 
 import com.mojang.logging.LogUtils;
+import net.michael.villaged.block.ModBlocks;
+import net.michael.villaged.item.ModCreativeModTabs;
+import net.michael.villaged.item.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
@@ -39,10 +42,13 @@ public class Villaged
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        ModCreativeModTabs.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(this);
-
         modEventBus.addListener(this::addCreative);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -56,6 +62,10 @@ public class Villaged
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
+        if(event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            event.accept(ModItems.EMERALD_PICKAXE);
+            event.accept(ModItems.NETHER_AMULET);
+        }
 
     }
 
